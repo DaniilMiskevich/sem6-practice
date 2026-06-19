@@ -1,0 +1,15 @@
+services:
+  wireguard:
+    build: .
+    network_mode: host
+    #ports: 
+      #- 80:10086
+      #- 51820:51820/udp
+    cap_add: 
+      - NET_ADMIN
+    volumes:
+      - db:/wgd/src/db
+      - ./wireguard-config:/etc/wireguard/
+
+volumes:
+  db:
