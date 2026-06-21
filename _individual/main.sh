@@ -15,5 +15,5 @@ if [ ! -f /etc/wireguard/wg0.conf ]; then
     echo
 fi
 
-mkdir -p /wgd/run/log
+cp /wgd/src/* ./ -R
 exec ./wgd.sh start

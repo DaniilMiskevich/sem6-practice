@@ -7,11 +7,11 @@ RUN apk update && apk add --no-cache    \
 RUN wget -O "wgd.tar.gz" "https://github.com/WGDashboard/WGDashboard/archive/refs/tags/v4.3.3.tar.gz"   &&\
     tar -xf ./wgd.tar.gz && rm ./wgd.tar.gz                                                             &&\
     mv "./WGDashboard-4.3.3" ./wgd
+COPY main.sh /main.sh
 WORKDIR /wgd/src
-COPY main.sh ./main.sh
 
 # a couple of small patches
-RUN echo "daemon = False" >> ./gunicorn.conf.py && echo "chdir = '/wgd/run'" >> ./gunicorn.conf.py
+RUN echo "daemon = False" >> ./gunicorn.conf.py
 RUN cat <( echo '#!/bin/bash' && echo 'sudo() { $@; }' ) ./wgd.sh > /tmp/wgd.sh && mv /tmp/wgd.sh ./wgd.sh && chmod +x ./wgd.sh
 
 # install app depends
@@ -21,4 +21,5 @@ RUN ./wgd.sh install
 COPY default.conf /tmp/default.conf
 RUN chmod 600 /tmp/default.conf
 
-CMD ["sh", "./main.sh"]
+WORKDIR /wgd/run
+CMD ["sh", "/main.sh"]
